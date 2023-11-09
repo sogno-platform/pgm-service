@@ -19,10 +19,14 @@ class FileInfo:
     url: str
 
 
-def transfer_to_fileservice(url):
-    resp = requests.get(url)
-    resp.raise_for_status()
-    file_data = resp.content
+def transfer_to_fileservice(url: str):
+    if url.startswith('http'):
+        resp = requests.get(url)
+        resp.raise_for_status()
+        file_data = resp.content
+    else:
+        with open(url, 'rb') as file:
+            file_data = file.read()
     resp = requests.post(f'{FILESERVICE_URL}/files/', data=file_data)
     resp.raise_for_status()
     info = FileInfo(**resp.json()["data"])
@@ -50,11 +54,13 @@ def start_powerflow(input_data):
             },
             "system_frequency": 50.0,  # Hz
         },
-        "symmetric": True,
-        "error_tolerance": 1e-8,
-        "max_iterations": 20,
-        "calculation_method": "newton_raphson",
-        # "output_component_types": [],
+        "calculation_args": {
+            "symmetric": True,
+            "error_tolerance": 1e-8,
+            "max_iterations": 20,
+            "calculation_method": "newton_raphson",
+            # "output_component_types": [],
+        }
     }
     resp = requests.post(f"{PGM_URL}/api/pgm_powerflow", json=powerflow_args)
     resp.raise_for_status()
