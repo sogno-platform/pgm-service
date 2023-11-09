@@ -4,10 +4,12 @@ from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
 
+from pgm_service.pgm_powerflow.models import PGM_Powerflow
 
-from pgm_service.power_powerflow.models import PGM_Powerflow
 
 base_config = ConfigDict(use_enum_values=True) # TODO Check if json_encoders = {datetime: lambda dt: dt.strftime("%Y-%m-%dT%H:%M:%SZ")} is needed as it will be deprecated in the future
+
+
 # XXX StrEnum is available from enum in python 3.11
 class StrEnum(str, Enum):
     pass
