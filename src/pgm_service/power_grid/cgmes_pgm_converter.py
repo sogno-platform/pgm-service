@@ -5,6 +5,9 @@ from enum import Enum
 from power_grid_model import initialize_array
 
 
+FREQUENCY = 50.0
+
+
 class System():
     def __init__(self):
         self.nodes = []
@@ -39,32 +42,38 @@ class System():
         for ACLineSegment in list_ACLineSegment:
             uuid_ACLineSegment = ACLineSegment.mRID
             connected_nodes = self._get_nodes(list_Terminals, uuid_ACLineSegment)
-            node_ids = list[connected_nodes.keys()]
-            status = list[connected_nodes.values()]
-            # self.lines[ACLineSegment.mRID] = {"from_node": node_ids[0],
-            #                                   "to_node": node_ids[1]}
-
-        line = initialize_array("input", "line", len(self.lines))
-        # line["id"] =
-        # line["from_node"] =
-        # line["to_node"] =
-        # line["from_status"] =
-        # line["to_status"] =
-        # line["r1"] = [single_line.r for single_line in self.lines.values()]
-        # line["x1"] = [single_line.x for single_line in self.lines.values()]
-        # line["c1"] = [single_line.bch / (2 * np.pi * FREQUENCY) for single_line in self.lines.values()]
-        # line["tan1"] = [single_line.gch / single_line.bch for single_line in self.lines.values()]
-        # line["i_n"] = [single_line.ratedCurrent for single_line in self.lines.values()]
-
-
+            node_ids = list(connected_nodes.keys())
+            status = list(connected_nodes.values())
+            self.lines[ACLineSegment.mRID] = {"from_node": self.nodes.index(node_ids[0]),
+                                              "to_node": self.nodes.index(node_ids[1]),
+                                              "from_status": status[0],
+                                              "to_status": status[0],
+                                              "r1": ACLineSegment.r,
+                                              "x1": ACLineSegment.x,
+                                              "c1": ACLineSegment.bch / (2 * np.pi * FREQUENCY),
+                                              "tan1": ACLineSegment.gch / ACLineSegment.bch}
+            # TODO: check if there is a multiplier for r1/x1, c1, tan1, i_n
 
     def create_pgm_input(self):
+        id_counter = 0
         node = initialize_array("input", "node", len(self.nodes))
         node["id"] = range(len(self.nodes))
         node["u_rated"] = self.voltages
-        print("debug")
+        id_counter += len(self.nodes)
 
-        return {"node": node}
+        line = initialize_array("input", "line", len(self.lines))
+        line["id"] = range(id_counter, id_counter + len(self.lines))
+        line["from_node"] = [line_param["from_node"] for line_param in self.lines.values()]
+        line["to_node"] = [line_param["to_node"] for line_param in self.lines.values()]
+        line["from_status"] = [line_param["from_status"] for line_param in self.lines.values()]
+        line["to_status"] = [line_param["to_status"] for line_param in self.lines.values()]
+        line["r1"] = [line_param["r1"] for line_param in self.lines.values()]
+        line["x1"] = [line_param["x1"] for line_param in self.lines.values()]
+        line["c1"] = [line_param["c1"] for line_param in self.lines.values()]
+        line["tan1"] = [line_param["tan1"] for line_param in self.lines.values()]
+
+        return {"node": node,
+                "line": line}
 
     def _get_nodes(self, list_Terminals, elem_uuid):
         start_node_uuid = None

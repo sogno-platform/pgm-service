@@ -18,10 +18,10 @@ def download_grid_data(name, url):
 url = 'https://raw.githubusercontent.com/dpsim-simulator/cim-grid-data/master/BasicGrids/NEPLAN/Slack_Load_Line_Sample/'
 filename = 'Rootnet_FULL_NE_19J18h'
 
-download_grid_data(filename+'_EQ.xml', url + filename + '_EQ.xml')
-download_grid_data(filename+'_TP.xml', url + filename + '_TP.xml')
-download_grid_data(filename+'_SV.xml', url + filename + '_SV.xml')
-
+# download_grid_data(filename+'_EQ.xml', url + filename + '_EQ.xml')
+# download_grid_data(filename+'_TP.xml', url + filename + '_TP.xml')
+# download_grid_data(filename+'_SV.xml', url + filename + '_SV.xml')
+#
 files = glob.glob(filename+'_*.xml')
 
 print('CGMES files downloaded:')
