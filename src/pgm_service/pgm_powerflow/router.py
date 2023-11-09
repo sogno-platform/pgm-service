@@ -45,7 +45,7 @@ async def new_powerflow_calculation(
     background_tasks: BackgroundTasks,
 ) -> JobComplete:  # TODO should be wrapped in jonb
     job = JobComplete(id="tmp", input=resource)
-    fileID = store_py_obj(job).json()["fileID"]
+    fileID = store_py_obj(job).json()["data"]["fileID"]
     job.id = fileID
     update_py_obj(job, id=job.id)
     # _id = str(uuid4())

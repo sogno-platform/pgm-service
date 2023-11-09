@@ -11,7 +11,9 @@ def store_py_obj(
     url: str = os.getenv("FILESERVICE_URL", "127.0.0.1"),
     port: int = int(os.getenv("FILESERVICE_PORT", 8080)),
 ) -> requests.Response:
-    return post_to_fileservice(pickle.dumps(data), url, port)
+    ret = post_to_fileservice(pickle.dumps(data), url, port)
+    print(ret.json())
+    return ret
 
 
 def update_py_obj(
@@ -20,7 +22,7 @@ def update_py_obj(
     url: str = os.getenv("FILESERVICE_URL", "127.0.0.1"),
     port: int = int(os.getenv("FILESERVICE_PORT", 8080)),
 ):
-    return requests.put(f"http://{url}:{port}/files/{id}", data=data)
+    return requests.put(f"http://{url}:{port}/files/{id}", data=pickle.dumps(data))
 
 
 def get_py_obj(
