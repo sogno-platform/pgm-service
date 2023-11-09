@@ -13,9 +13,7 @@ class StrEnum(str, Enum):
     pass
 
 
-# Basic input data
-class PGM_Powerflow(BaseModel):
-    model: Union[str, Grid]
+class PGM_PowerflowCalculationArgs(BaseModel):
     symmetric: bool = True
     error_tolerance: float = 1e-8
     max_iterations: int = 20
@@ -24,3 +22,9 @@ class PGM_Powerflow(BaseModel):
     # threading: int = -1
     output_component_types: Optional[List[str]] = None
     # continue_on_batch_error: bool = False
+
+
+# Basic input data
+class PGM_Powerflow(BaseModel):
+    model: Grid
+    calculation_args: PGM_PowerflowCalculationArgs

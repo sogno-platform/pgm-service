@@ -3,13 +3,11 @@ from fastapi.responses import RedirectResponse
 
 from power_grid_model import initialize_array  # TODO(mgovers) remove
 
-from pgm_service.power_grid.router import router as pg_router
 from pgm_service.pgm_powerflow.router import router as pf_router
 
 
 app = FastAPI(title="API")
 
-app.include_router(pg_router, prefix="/api")
 app.include_router(pf_router, prefix="/api")
 
 
