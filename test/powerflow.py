@@ -90,7 +90,7 @@ def process_results(job_id, output):
     if output == '-':
         print(resp.content.decode('utf-8'))
     else:
-        with open(output, 'rb') as file:
+        with open(output, 'wb') as file:
             file.write(resp.content)
 
 
