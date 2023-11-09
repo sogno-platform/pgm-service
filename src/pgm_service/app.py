@@ -1,7 +1,16 @@
 from fastapi import FastAPI
-from power_grid_model import initialize_array
+from fastapi.responses import RedirectResponse
 
-app = FastAPI()
+from power_grid_model import initialize_array  # TODO(mgovers) remove
+
+from pgm_service.power_grid.router import router as pg_router
+from pgm_service.pgm_powerflow.router import router as pf_router
+
+
+app = FastAPI(title="API")
+
+app.include_router(pg_router, prefix="/api")
+app.include_router(pf_router, prefix="/api")
 
 
 @app.get("/initialize/{dataset_type}/{component}/{size}")
@@ -11,6 +20,7 @@ def initialize(dataset_type: str, component: str, size: int):
 
 
 @app.get("/")
-def initialize_default():
-    arr = initialize_array("input", "node", 1)
-    return repr(arr)
+def redirect_to_docs():
+    """Redirect users to the docs of the default API version (typically the latest)"""
+    redirect_url = "/docs"
+    return RedirectResponse(url=redirect_url)
