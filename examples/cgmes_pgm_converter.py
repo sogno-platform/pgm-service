@@ -9,7 +9,7 @@ class System():
     def __init__(self):
         self.nodes = []
         self.voltages = []
-        # self.branches = []
+        self.lines = {}
 
     def load_cim_data(self, res):
         """
@@ -23,7 +23,7 @@ class System():
         # list_SvPowerFlow = [elem for elem in res.values() if elem.__class__.__name__ == "SvPowerFlow"]
         # list_EnergySources = [elem for elem in res.values() if elem.__class__.__name__ == "EnergySource"]
         # list_EnergyConsumer = [elem for elem in res.values() if elem.__class__.__name__ == "EnergyConsumer"]
-        list_ACLineSegment = [elem for elem in res.values() if elem.__class__.__name__ == "ACLineSegment"]
+        # list_ACLineSegment = [elem for elem in res.values() if elem.__class__.__name__ == "ACLineSegment"]
         # list_Terminals = [elem for elem in res.values() if elem.__class__.__name__ == "Terminal"]
         # list_Terminals_ES = [elem for elem in list_Terminals if
         #                      elem.ConductingEquipment.__class__.__name__ == "EnergySource"]
@@ -37,56 +37,19 @@ class System():
 
         # # create branches type ACLineSegment
         # for ACLineSegment in list_ACLineSegment:
-            # line = initialize_array("input", "line", len(self.lines))
-            #
-            # # Map each Line mRID to the assigned numerical Line ID
-            # line["id"] = mapd(self.lines.keys(), self.asset_lookup)
-            #
-            # # Map the terminal mRID on the from/to side of each line to a Node mRID,
-            # # and the Node mRID to the assigned numerical Node ID
-            # line["from_node"] = mapd(
-            #     mapd(
-            #         self.lines.values(),
-            #         self.terminals_to_node_lookup,
-            #         lambda l: l.terminal_from,
-            #         "Line-from Terminal",
-            #         "Topology",
-            #     ),
-            #     self.asset_lookup,
-            # )
-            # line["to_node"] = mapd(
-            #     mapd(
-            #         self.lines.values(),
-            #         self.terminals_to_node_lookup,
-            #         lambda l: l.terminal_to,
-            #         "Line-to Terminal",
-            #         "Topology",
-            #     ),
-            #     self.asset_lookup,
-            # )
-            # # Map the terminal mRID on the from/to side of each line to a terminal status
-            # line["from_status"] = mapd(
-            #     self.lines.values(),
-            #     self.terminal_status,
-            #     lambda l: l.terminal_from,
-            #     "Line-from Status",
-            #     "SteadyStateHypothesis",
-            # )
-            # line["to_status"] = mapd(
-            #     self.lines.values(),
-            #     self.terminal_status,
-            #     lambda l: l.terminal_to,
-            #     "Line-to Status",
-            #     "SteadyStateHypothesis",
-            # )
-            #
-            # # Extract the Line parameters
-            # # TODO r0, x0, c0 and tan0 are not defined yet, since they are only needed for asymmetrical calculations
-            # line["r1"] = [single_line.r for single_line in self.lines.values()]
-            # line["x1"] = [single_line.x for single_line in self.lines.values()]
-            # line["c1"] = [single_line.bch / (2 * np.pi * FREQUENCY) for single_line in self.lines.values()]
-            # line["tan1"] = [single_line.gch / single_line.bch for single_line in self.lines.values()]
-            # line["i_n"] = [single_line.ratedCurrent for single_line in self.lines.values()]
+        #     self.lines[ACLineSegment]
+
+        # line = initialize_array("input", "line", len(self.lines))
+        # line["id"] =
+        # line["from_node"] =
+        # line["to_node"] =
+        # line["from_status"] =
+        # line["to_status"] =
+        # line["r1"] = [single_line.r for single_line in self.lines.values()]
+        # line["x1"] = [single_line.x for single_line in self.lines.values()]
+        # line["c1"] = [single_line.bch / (2 * np.pi * FREQUENCY) for single_line in self.lines.values()]
+        # line["tan1"] = [single_line.gch / single_line.bch for single_line in self.lines.values()]
+        # line["i_n"] = [single_line.ratedCurrent for single_line in self.lines.values()]
 
 
 

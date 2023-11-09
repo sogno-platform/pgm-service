@@ -6,7 +6,7 @@ import os
 import requests
 import glob
 
-#from cgmes_pgm_converter import System
+from cgmes_pgm_converter import System
 
 logging.basicConfig(filename='run_powerflow.log', level=logging.INFO, filemode='w')
 
@@ -27,7 +27,7 @@ files = glob.glob(filename+'_*.xml')
 print('CGMES files downloaded:')
 print(files)
 
-this_file_folder =  Path(__file__).parents[1]
+this_file_folder =  Path(__file__).parents[0]
 p = str(this_file_folder)
 xml_path = Path(p)
 xml_files = [os.path.join(xml_path, filename+'_EQ.xml'),
@@ -43,4 +43,4 @@ system = System()
 system.load_cim_data(res)
 pgm_input = system.create_pgm_input()
 
-print("debug")
+print(pgm_input)
