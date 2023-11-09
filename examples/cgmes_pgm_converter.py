@@ -8,17 +8,17 @@ from power_grid_model import initialize_array
 class System():
     def __init__(self):
         self.nodes = []
+        self.voltages = []
         # self.branches = []
 
     def load_cim_data(self, res):
         """
         fill the vectors node, branch and breakers
         """
-        self.nodes = []
-        # self.branches = []
 
         index = 0
         list_TPNode = [elem for elem in res['topology'].values() if elem.__class__.__name__ == "TopologicalNode"]
+        dict_VoltageLevel = {elem.TopologicalNode[0]: elem.BaseVoltage.nominalVoltage * 1e3 for elem in res['topology'].values() if elem.__class__.__name__ == "VoltageLevel"}
         # list_SvVoltage = [elem for elem in res.values() if elem.__class__.__name__ == "SvVoltage"]
         # list_SvPowerFlow = [elem for elem in res.values() if elem.__class__.__name__ == "SvPowerFlow"]
         # list_EnergySources = [elem for elem in res.values() if elem.__class__.__name__ == "EnergySource"]
@@ -32,38 +32,10 @@ class System():
 
         # create nodes
         for TPNode in list_TPNode:
-            # uuid_TPNode = TPNode.mRID
-            # name = TPNode.name
-            # vmag = 0.0
-            # vphase = 0.0
-            # pInj = 0.0
-            # qInj = 0.0
-            #
-            # for obj_SvVoltage in list_SvVoltage:
-            #     if obj_SvVoltage.TopologicalNode.mRID == uuid_TPNode:
-            #         vmag = obj_SvVoltage.v
-            #         vphase = obj_SvVoltage.angle
-            #         break
-            # for obj_SvPowerFlow in list_SvPowerFlow:
-            #     if obj_SvPowerFlow.Terminal.TopologicalNode.mRID == uuid_TPNode:
-            #         pInj -= obj_SvPowerFlow.p
-            #         qInj -= obj_SvPowerFlow.q
-            # for obj_Terminal in list_Terminals_ES:
-            #     if obj_Terminal.TopologicalNode.mRID == uuid_TPNode:
-            #         for obj_EnergySource in list_EnergySources:
-            #             if obj_EnergySource.mRID == obj_Terminal.ConductingEquipment.mRID:
-            #                 pInj += obj_EnergySource.activePower
-            #                 qInj += obj_EnergySource.reactivePower
-            # for obj_Terminal in list_Terminals_EC:
-            #     if obj_Terminal.TopologicalNode.mRID == uuid_TPNode:
-            #         for obj_EnergyConsumer in list_EnergyConsumer:
-            #             if obj_EnergyConsumer.mRID == obj_Terminal.ConductingEquipment.mRID:
-            #                 pInj -= obj_EnergyConsumer.p
-            #                 qInj -= obj_EnergyConsumer.q
             self.nodes.append(TPNode.mRID)
-        node = initialize_array("input", "node", len(self.nodes))
-        node["id"] = range(len(self.nodes))
-        node["u_rated"] =
+            self.voltages.append(dict_VoltageLevel[TPNode])
+
+
 
         #
         #
@@ -110,3 +82,11 @@ class System():
         # # calculate admitance matrix
         # self.Ymatrix_calc()
 
+
+    def create_pgm_input(self):
+        node = initialize_array("input", "node", len(self.nodes))
+        node["id"] = range(len(self.nodes))
+        node["u_rated"] = self.voltages
+        print("debug")
+
+        return {"node": node}
