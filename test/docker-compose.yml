@@ -1,6 +1,6 @@
 services:
   fileservice:
-    image: ghcr.io/sogno-platform/pgm-service/fileservice:pr-5
+    image: ghcr.io/sogno-platform/pgm-service/fileservice:main
     build:
       context: fileservice
     volumes:
@@ -13,8 +13,8 @@ services:
   worker:
     image: ghcr.io/sogno-platform/pgm-service:main
     build:
-      context: ../app
+      context: ..
     environment:
-      FILESERVICE_URL: http://fileservice:8080/files/
+      FILESERVICE_URL: http://fileservice:8080/
     ports:
       - 80:80
