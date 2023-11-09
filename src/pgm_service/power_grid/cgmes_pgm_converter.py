@@ -126,3 +126,15 @@ class System():
             node_connected = terminal.connected
 
         return {node_uuid: node_connected}
+
+    def pgm_to_SV(self, results, input):
+
+        list_TPNode = [elem for elem in input['topology'].values() if elem.__class__.__name__ == "TopologicalNode"]
+        list_SvVoltage = [elem for elem in res.values() if elem.__class__.__name__ == "SvVoltage"]
+        
+        for node in results["node"]:
+            node_mRID = self.nodes[node["id"]]
+
+            print(debug)
+        
+        
