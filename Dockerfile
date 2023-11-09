@@ -5,7 +5,7 @@ WORKDIR /code
 RUN python -m pip install --no-cache-dir --upgrade pip && \
     python -m pip install --no-cache-dir power-grid-model fastapi "uvicorn[standard]"
 
-COPY ./app /code/app
+COPY src/pgm_service /code/app
 
 EXPOSE 80
 

@@ -1,0 +1,53 @@
+[build-system]
+requires = [
+    "setuptools",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pgm-service"
+version = "0.0.1"
+authors = [{name = "Collaboration team of RWTH, Alliander, PSI"}]
+description = "PGM service"
+readme = "README.md"
+license = {text = "Apache"}
+classifiers=[
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=1.20",
+    "power_grid_model>=1.6",
+    "fastapi",
+    "uvicorn",
+]
+
+[project.optional-dependencies]
+dev = [
+    "isort",
+    "black",
+]
+
+[project.urls]
+GitHub = "https://github.com/sogno-platform/pgm-service"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
+
+[tool.black]
+line-length = 120
+target-version = ["py39", "py310", "py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
