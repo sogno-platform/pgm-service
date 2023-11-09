@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from power_grid.aux_models import JobComplete
 from power_grid.models import Grid
 
-router = APIRouter(prefix="/power_grid")
+router = APIRouter(prefix="/power_grid", tags=["Grid"])
 
 
 @router.get("/")

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from pgm_powerflow.aux_models import JobComplete
 from pgm_powerflow.models import PGM_Powerflow
 
-router = APIRouter(prefix="/pgm_powerflow")
+router = APIRouter(prefix="/pgm_powerflow", tags=["Powerflow"])
 
 
 @router.get("/")
