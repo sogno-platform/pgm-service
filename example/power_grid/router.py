@@ -17,7 +17,7 @@ async def new_payment_calculation(
     resource: Grid,
 ) -> JobComplete:  # TODO should be wrapped in jonb
     # raise NotImplementedError()  # TODO This should create a new job entry in DB
-    resource = Grid(**resource.model_dump(), personal_nr="1")
+    resource = Grid(**resource.model_dump())
     job = JobComplete(id="test",input=resource)
     return job
 
