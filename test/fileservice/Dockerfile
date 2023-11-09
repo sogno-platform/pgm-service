@@ -1,6 +1,6 @@
 FROM python:3.12
 
-RUN python -m pip install fastapi; mkdir /data
+RUN python -m pip install fastapi uvicorn && mkdir /data
 COPY fileservice.py fileservice.py
 
 EXPOSE 8080
