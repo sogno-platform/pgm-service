@@ -5,6 +5,8 @@ from pydantic import BaseModel
 
 from power_grid_model import CalculationMethod
 
+from power_grid import Grid
+
 
 # XXX StrEnum is available from enum in python 3.11
 class StrEnum(str, Enum):
@@ -13,7 +15,7 @@ class StrEnum(str, Enum):
 
 # Basic input data
 class PGM_Powerflow(BaseModel):
-    model: str
+    model: Union[str, Grid]
     symmetric: bool = True
     error_tolerance: float = 1e-8
     max_iterations: int = 20
