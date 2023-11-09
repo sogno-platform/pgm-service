@@ -12,3 +12,8 @@ class StrEnum(str, Enum):
 class Grid(BaseModel):
     input_data: str
     system_frequency: float = 50.0
+
+class InputData(BaseModel):
+    sv: str
+    eq: str
+    tp: str

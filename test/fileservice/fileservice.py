@@ -50,7 +50,7 @@ def list_files() -> dict:
 
 
 @app.post("/files/")
-async def new_file(request: Request) -> dict | Response:
+async def new_file(request: Request) -> dict:
     try:
         id = str(uuid.uuid4())
         with open(os.path.join(DATA_DIR, id), 'wb') as file:

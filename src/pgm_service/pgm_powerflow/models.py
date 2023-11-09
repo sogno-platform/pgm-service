@@ -13,6 +13,11 @@ class StrEnum(str, Enum):
     pass
 
 
+class InputData(BaseModel):
+    sv: str
+    eq: str
+    tp: str
+
 # Basic input data
 class PGM_Powerflow(BaseModel):
     model: Union[str, Grid]

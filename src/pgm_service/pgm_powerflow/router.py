@@ -22,7 +22,10 @@ async def new_powerflow_calculation(
 ) -> JobComplete:  # TODO should be wrapped in jonb
     # raise NotImplementedError()  # TODO This should create a new job entry in DB
     assert isinstance(resource.model, Grid)
+
     model = PowerGridModel(input_data={}, system_frequency=resource.model.system_frequency)
+    job = JobComplete(id="test", input=resource)
+    
     pf_args = resource.model_dump()
     del pf_args["model"]
     calculation_result = model.calculate_power_flow(**pf_args)
