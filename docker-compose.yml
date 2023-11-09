@@ -2,18 +2,18 @@ services:
   fileservice:
     image: ghcr.io/sogno-platform/pgm-service/fileservice:main
     build:
-      context: fileservice
+      context: test/fileservice
     volumes:
-      - ../data:/data
+      - ./data:/data
     environment:
       DATA_DIR: "/data"
-      BASE_URL: "http://localhost:8080/"
+      BASE_URL: "http://fileservice:8080/"
     ports:
       - 8080:8080
   worker:
     image: ghcr.io/sogno-platform/pgm-service:main
     build:
-      context: ..
+      context: . 
     environment:
       FILESERVICE_URL: http://fileservice:8080/
     ports:
