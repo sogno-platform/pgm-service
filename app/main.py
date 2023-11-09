@@ -16,7 +16,3 @@ def initialize(dataset_type: str, component: str, size: int):
 def initialize_default():
     arr = initialize_array("input", "node", 1)
     return repr(arr)
-
-
-if __name__ == "__main__":
-    main()
