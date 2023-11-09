@@ -1,39 +1,57 @@
-from fastapi import APIRouter
+from datetime import datetime
+from typing import Dict
+from uuid import uuid4
+from fastapi import APIRouter, BackgroundTasks
 
-from power_grid_model import PowerGridModel
-
-from pgm_service.pgm_powerflow.aux_models import JobComplete
+from pgm_service.pgm_powerflow.aux_models import JobComplete, Status
 from pgm_service.pgm_powerflow.models import PGM_Powerflow
-from pgm_service.power_grid.models import Grid
+from pgm_service.power_grid.power_grid_model import calculate_powerflow
 
 
 router = APIRouter(prefix="/pgm_powerflow", tags=["Powerflow"])
 
+JOBS: Dict[str, JobComplete] = {}
+
 
 @router.get("/")
 async def get_all_powerflow_calculation() -> list[str]:
-    """Returns list of existing powerflow_calculation IDs"""  # XXX should this return url/uris?
-    raise NotImplementedError()  # TODO this should look up ids from DB and return them
+    """Returns list of existing powerflow_calculation IDs"""
+    return list(JOBS.keys())
+
+
+async def _calculate(job: JobComplete):
+    job.status = Status.RUNNING
+
+    try:
+        grid = job.input.model
+        pf_kwargs = job.input.calculation_args.model_dump()
+
+        await calculate_powerflow(grid=grid, pf_kwargs=pf_kwargs)
+
+        job.finished = datetime.now()
+        job.status = Status.SUCCESS
+    except Exception as e:
+        job.status = Status.FAILED
+        job.details = e
 
 
 @router.post("/")
 async def new_powerflow_calculation(
     resource: PGM_Powerflow,
+    background_tasks: BackgroundTasks,
 ) -> JobComplete:  # TODO should be wrapped in jonb
-    # raise NotImplementedError()  # TODO This should create a new job entry in DB
-    assert isinstance(resource.model, Grid)
-    model = PowerGridModel(input_data={}, system_frequency=resource.model.system_frequency)
-    pf_args = resource.model_dump()
-    del pf_args["model"]
-    calculation_result = model.calculate_power_flow(**pf_args)
-    print(calculation_result)
-    job = JobComplete(id="test", input=resource)
+    _id = str(uuid4())
+    JOBS[_id] = JobComplete(id=_id, input=resource)
+    job = JOBS[_id]
+
+    background_tasks.add_task(_calculate, job=job)
+
     return job
 
 
 @router.get("/{id}")
 async def get_powerflow_calculation(id: str) -> JobComplete:
-    raise NotImplementedError()  # TODO fetch Job with ID from the DB
+    return JOBS[id]
 
 
 # @router.put("/{id}")
@@ -44,4 +62,4 @@ async def get_powerflow_calculation(id: str) -> JobComplete:
 
 @router.delete("/{id}")
 async def delete_powerflow_calculation(id: str) -> JobComplete:
-    raise NotImplementedError()  # TODO this should fetch the hob if possible then delete and return it
+    return JOBS.pop(id)
