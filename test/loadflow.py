@@ -5,8 +5,8 @@ import argparse
 from dataclasses import dataclass
 import logging
 
-FILESERVICE_URL = os.getenv('FILESERVICE_URL', 'http://localhost:8080').removeprefix('/')
-PGM_URL = os.getenv('PGM_URL', 'http://localhost:80').removeprefix('/')
+FILESERVICE_URL = os.getenv('FILESERVICE_URL', 'http://localhost:8080')
+PGM_URL = os.getenv('PGM_URL', 'http://localhost:80')
 
 DEFAULT_REPO = 'https://raw.githubusercontent.com/dpsim-simulator/cim-grid-data/master/BasicGrids/NEPLAN/Slack_Load_Line_Sample/'
 DEFAULT_NET = 'Rootnet_FULL_NE_19J18h'
@@ -39,9 +39,9 @@ def start_powerflow(input_data):
     powerflow_args = {
         "model": {
             "input_data": {
-                "eq": EQ,  # Equipment
-                "tp": TP,  # Topology
-                "sv": SV,  # State variables
+                "eq": EQ.fileID,  # Equipment
+                "tp": TP.fileID,  # Topology
+                "sv": SV.fileID,  # State variables
             },
             "system_frequency": 50.0,  # Hz
         },
@@ -95,6 +95,12 @@ def main(args):
 if __name__ == '__main__':
     logging.basicConfig(level=os.getenv('LOG_LEVEL', 'INFO'))
     argp = argparse.ArgumentParser()
-    argp.add_argument('network_url', nargs='?', default=DEFAULT_REPO+DEFAULT_NET)
+    argp.add_argument('network_url', nargs='?',
+                      default=DEFAULT_REPO+DEFAULT_NET)
     argp.add_argument('--output', '-o', default='-')
-    main(argp.parse_args())
+    argp.add_argument('--file-service-url', default=FILESERVICE_URL)
+    argp.add_argument('--pgm-service-url', default=PGM_URL)
+    args = argp.parse_args()
+    FILESERVICE_URL = args.file_service_url.removesuffix('/')
+    PGM_URL = args.pgm_service_url.removesuffix('/')
+    main(args)
