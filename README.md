@@ -11,7 +11,7 @@ docker-compose up -d
 Run the example loadflow case (requires `requests` package).
 
 ```bash
-python -m test.loadflow
+python -m test.powerflow
 ```
 
 ## Install

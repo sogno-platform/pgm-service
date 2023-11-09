@@ -24,10 +24,14 @@ def transfer_to_fileservice(url):
     resp.raise_for_status()
     file_data = resp.content
     resp = requests.post(f'{FILESERVICE_URL}/files/', data=file_data)
-    return FileInfo(**resp.json()["data"])
+    resp.raise_for_status()
+    info = FileInfo(**resp.json()["data"])
+    logging.info('Uploaded CGMES file from %s to %s', url, info.url)
+    return info
 
 
 def load_data(baseurl):
+    logging.debug('Initializing data')
     id_EQ = transfer_to_fileservice(baseurl + '_EQ.xml')
     id_TP = transfer_to_fileservice(baseurl + '_TP.xml')
     id_SV = transfer_to_fileservice(baseurl + '_SV.xml')
@@ -35,6 +39,7 @@ def load_data(baseurl):
 
 
 def start_powerflow(input_data):
+    logging.debug('Starting power flow calculation')
     (EQ, TP, SV) = input_data
     powerflow_args = {
         "model": {
@@ -93,14 +98,15 @@ def main(args):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=os.getenv('LOG_LEVEL', 'INFO'))
     argp = argparse.ArgumentParser()
     argp.add_argument('network_url', nargs='?',
                       default=DEFAULT_REPO+DEFAULT_NET)
     argp.add_argument('--output', '-o', default='-')
     argp.add_argument('--file-service-url', default=FILESERVICE_URL)
     argp.add_argument('--pgm-service-url', default=PGM_URL)
+    argp.add_argument('--verbose', '-', action='store_true', default=False)
     args = argp.parse_args()
+    logging.basicConfig(level='DEBUG' if args.verbose else 'WARNING')
     FILESERVICE_URL = args.file_service_url.removesuffix('/')
     PGM_URL = args.pgm_service_url.removesuffix('/')
     main(args)
