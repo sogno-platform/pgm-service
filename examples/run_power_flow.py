@@ -1,25 +1,42 @@
 import logging
 from pathlib import Path
-import numpy
 import cimpy
 import os
 
-from cgmes_pgm_converter import System
+import requests
+import glob
 
+#from cgmes_pgm_converter import System
 
-logging.basicConfig(filename='run_nv_powerflow.log', level=logging.INFO, filemode='w')
+logging.basicConfig(filename='run_powerflow.log', level=logging.INFO, filemode='w')
 
-#python starts as module in subdirectory, 2 folders up to set the new path
-this_file_folder =  Path(__file__).parents[0]
-p = str(this_file_folder) + "/data"
+def download_grid_data(name, url):
+    with open(name, 'wb') as out_file:
+        content = requests.get(url, stream=True).content
+        out_file.write(content)
+
+url = 'https://raw.githubusercontent.com/dpsim-simulator/cim-grid-data/master/BasicGrids/NEPLAN/Slack_Load_Line_Sample/'
+filename = 'Rootnet_FULL_NE_19J18h'
+
+download_grid_data(filename+'_EQ.xml', url + filename + '_EQ.xml')
+download_grid_data(filename+'_TP.xml', url + filename + '_TP.xml')
+download_grid_data(filename+'_SV.xml', url + filename + '_SV.xml')
+
+files = glob.glob(filename+'_*.xml')
+
+print('CGMES files downloaded:')
+print(files)
+
+this_file_folder =  Path(__file__).parents[1]
+p = str(this_file_folder)
 xml_path = Path(p)
+xml_files = [os.path.join(xml_path, filename+'_EQ.xml'),
+             os.path.join(xml_path, filename+'_TP.xml'),
+             os.path.join(xml_path, filename+'_SV.xml')]
 
+print(xml_files)
 
-xml_files = [os.path.join(xml_path, "Rootnet_FULL_NE_19J18h_TP.xml"),
-             os.path.join(xml_path, "Rootnet_FULL_NE_19J18h_EQ.xml"),
-             os.path.join(xml_path, "Rootnet_FULL_NE_19J18h_SV.xml")]
-
-# Read cim files and create new network.System object
+## Read cim files and create new network.System object
 res = cimpy.cim_import(xml_files, "cgmes_v2_4_15")
 
 system = System()
