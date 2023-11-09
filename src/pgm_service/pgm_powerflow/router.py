@@ -4,6 +4,7 @@ from power_grid_model import PowerGridModel
 
 from pgm_service.pgm_powerflow.aux_models import JobComplete
 from pgm_service.pgm_powerflow.models import PGM_Powerflow
+from pgm_service.power_grid.models import Grid
 
 
 router = APIRouter(prefix="/pgm_powerflow", tags=["Powerflow"])
@@ -20,10 +21,11 @@ async def new_payment_calculation(
     resource: PGM_Powerflow,
 ) -> JobComplete:  # TODO should be wrapped in jonb
     # raise NotImplementedError()  # TODO This should create a new job entry in DB
-    resource.model.input_data = {}
-    pf = PGM_Powerflow(**resource.model_dump())
-    model = PowerGridModel(**resource.model.model_dump())
-    calculation_result = model.calculate_power_flow(**resource.model_dump())
+    assert isinstance(resource.model, Grid)
+    model = PowerGridModel(input_data={}, system_frequency=resource.model.system_frequency)
+    pf_args = resource.model_dump()
+    del pf_args["model"]
+    calculation_result = model.calculate_power_flow(**pf_args)
     print(calculation_result)
     job = JobComplete(id="test", input=resource)
     return job
