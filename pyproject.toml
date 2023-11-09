@@ -28,6 +28,8 @@ dependencies = [
     "power_grid_model>=1.6",
     "fastapi",
     "uvicorn",
+    "cimpy",
+    "requests"
 ]
 
 [project.optional-dependencies]
