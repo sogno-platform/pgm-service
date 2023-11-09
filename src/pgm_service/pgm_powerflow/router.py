@@ -32,7 +32,7 @@ async def _calculate(job: JobComplete):
         job.status = Status.SUCCESS
     except Exception as e:
         job.status = Status.FAILED
-        job.details = e
+        job.details = repr(e)
 
 
 @router.post("/")
