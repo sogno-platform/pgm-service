@@ -1,12 +1,12 @@
-FROM python:3
+FROM python:3-slim
 
-WORKDIR /code
+COPY dist /dist
 
-RUN python -m pip install --no-cache-dir --upgrade pip && \
-    python -m pip install --no-cache-dir power-grid-model fastapi "uvicorn[standard]"
-
-COPY ./app /code/app
+RUN pip install dist/*.whl
 
 EXPOSE 80
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+ENV PATH /usr/local/bin:$PATH
+
+ENTRYPOINT ["pgm-service"]
+
