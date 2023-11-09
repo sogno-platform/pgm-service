@@ -23,8 +23,8 @@ class System():
         # list_SvPowerFlow = [elem for elem in res.values() if elem.__class__.__name__ == "SvPowerFlow"]
         # list_EnergySources = [elem for elem in res.values() if elem.__class__.__name__ == "EnergySource"]
         # list_EnergyConsumer = [elem for elem in res.values() if elem.__class__.__name__ == "EnergyConsumer"]
-        # list_ACLineSegment = [elem for elem in res.values() if elem.__class__.__name__ == "ACLineSegment"]
-        # list_Terminals = [elem for elem in res.values() if elem.__class__.__name__ == "Terminal"]
+        list_ACLineSegment = [elem for elem in res['topology'].values() if elem.__class__.__name__ == "ACLineSegment"]
+        list_Terminals = [elem for elem in res['topology'].values() if elem.__class__.__name__ == "Terminal"]
         # list_Terminals_ES = [elem for elem in list_Terminals if
         #                      elem.ConductingEquipment.__class__.__name__ == "EnergySource"]
         # list_Terminals_EC = [elem for elem in list_Terminals if
@@ -35,11 +35,16 @@ class System():
             self.nodes.append(TPNode.mRID)
             self.voltages.append(dict_VoltageLevel[TPNode])
 
-        # # create branches type ACLineSegment
-        # for ACLineSegment in list_ACLineSegment:
-        #     self.lines[ACLineSegment]
+        # create branches type ACLineSegment
+        for ACLineSegment in list_ACLineSegment:
+            uuid_ACLineSegment = ACLineSegment.mRID
+            connected_nodes = self._get_nodes(list_Terminals, uuid_ACLineSegment)
+            node_ids = list[connected_nodes.keys()]
+            status = list[connected_nodes.values()]
+            # self.lines[ACLineSegment.mRID] = {"from_node": node_ids[0],
+            #                                   "to_node": node_ids[1]}
 
-        # line = initialize_array("input", "line", len(self.lines))
+        line = initialize_array("input", "line", len(self.lines))
         # line["id"] =
         # line["from_node"] =
         # line["to_node"] =
@@ -60,3 +65,23 @@ class System():
         print("debug")
 
         return {"node": node}
+
+    def _get_nodes(self, list_Terminals, elem_uuid):
+        start_node_uuid = None
+        end_node_uuid = None
+        start_node_connected = None
+        end_node_connected = None
+
+        for terminal in list_Terminals:
+            if terminal.ConductingEquipment.mRID != elem_uuid:
+                continue
+            sequence_number = terminal.sequenceNumber
+            if sequence_number == 1:
+                start_node_uuid = terminal.TopologicalNode.mRID
+                start_node_connected = terminal.connected
+            elif sequence_number == 2:
+                end_node_uuid = terminal.TopologicalNode.mRID
+                end_node_connected = terminal.connected
+
+
+        return {start_node_uuid: start_node_connected, end_node_uuid: end_node_connected}
