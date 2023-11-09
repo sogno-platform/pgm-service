@@ -1,10 +1,26 @@
 # pgm-service
 
-## Install
+## Run with Docker Compose
 
-Create and activate a Python 3.12 virtual environment. Go to the root folder of this repository. Run
+Run inside the project root directory.
 
 ```bash
+docker-compose up -d
+```
+
+Run the example loadflow case (requires `requests` package).
+
+```bash
+python -m test.loadflow
+```
+
+## Install
+
+Create and activate a Python 3.12z virtual environment. Go to the root folder of this repository. Run
+
+```bash
+python -m pip install build
+python -m build --wheel --outdir dist
 docker build --no-cache -t pgm-service .
 ```
 
