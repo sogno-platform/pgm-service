@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 
-from pgm_service.power_grid.models import Grid
+from pgm_service.power_powerflow.models import PGM_Powerflow
 
 base_config = ConfigDict(use_enum_values=True) # TODO Check if json_encoders = {datetime: lambda dt: dt.strftime("%Y-%m-%dT%H:%M:%SZ")} is needed as it will be deprecated in the future
 # XXX StrEnum is available from enum in python 3.11
@@ -21,7 +21,7 @@ class Status(StrEnum):
 class JobBase(BaseModel):
     model_config = base_config
     id: str # TODO add default generator
-    input: Grid
+    input: PGM_Powerflow
 
 
 class JobComplete(JobBase):
@@ -29,4 +29,4 @@ class JobComplete(JobBase):
     details: Optional[str] = None
     created: datetime = Field(default_factory=datetime.now)
     finished: Optional[datetime] = None
-    result: Grid = None
+    result: PGM_Powerflow = None
