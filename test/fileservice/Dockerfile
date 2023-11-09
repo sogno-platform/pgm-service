@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.10
 
 RUN python -m pip install fastapi uvicorn && mkdir /data
 COPY fileservice.py fileservice.py
