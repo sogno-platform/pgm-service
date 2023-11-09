@@ -6,7 +6,7 @@ import os
 import requests
 import glob
 
-from src.pgm_service.power_grid.cgmes_pgm_converter import System
+from pgm_service.power_grid.cgmes_pgm_converter import System
 
 from power_grid_model import PowerGridModel
 
