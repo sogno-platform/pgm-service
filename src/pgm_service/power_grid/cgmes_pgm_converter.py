@@ -2,7 +2,7 @@ import logging
 import numpy as np
 from enum import Enum
 
-from power_grid_model import initialize_array
+from power_grid_model import initialize_array, LoadGenType
 
 
 FREQUENCY = 50.0
@@ -14,25 +14,14 @@ class System():
         self.voltages = []
         self.lines = {}
         self.sources = {}
+        self.energy_consumers = {}
 
     def load_cim_data(self, res):
-        """
-        fill the vectors node, branch and breakers
-        """
-
-        index = 0
         list_TPNode = [elem for elem in res['topology'].values() if elem.__class__.__name__ == "TopologicalNode"]
         dict_VoltageLevel = {elem.TopologicalNode[0]: elem.BaseVoltage.nominalVoltage * 1e3 for elem in res['topology'].values() if elem.__class__.__name__ == "VoltageLevel"}
-        # list_SvVoltage = [elem for elem in res.values() if elem.__class__.__name__ == "SvVoltage"]
-        # list_SvPowerFlow = [elem for elem in res.values() if elem.__class__.__name__ == "SvPowerFlow"]
-        # list_EnergySources = [elem for elem in res.values() if elem.__class__.__name__ == "EnergySource"]
-        # list_EnergyConsumer = [elem for elem in res.values() if elem.__class__.__name__ == "EnergyConsumer"]
+        list_EnergyConsumer = [elem for elem in res['topology'].values() if elem.__class__.__name__ == "EnergyConsumer"]
         list_ACLineSegment = [elem for elem in res['topology'].values() if elem.__class__.__name__ == "ACLineSegment"]
         list_Terminals = [elem for elem in res['topology'].values() if elem.__class__.__name__ == "Terminal"]
-        # list_Terminals_ES = [elem for elem in list_Terminals if
-        #                      elem.ConductingEquipment.__class__.__name__ == "EnergySource"]
-        # list_Terminals_EC = [elem for elem in list_Terminals if
-        #                      elem.ConductingEquipment.__class__.__name__ == "EnergyConsumer"]
         list_Source = [elem for elem in res['topology'].values() if elem.__class__.__name__ == "ExternalNetworkInjection"]
 
         # create nodes
@@ -65,6 +54,20 @@ class System():
                                          "u_ref": 1.0,
                                          "sk": DEFAULT_SOURCE_SHORT_CIRCUIT_POWER}
 
+        for EnergyConsumer in list_EnergyConsumer:
+            connected_node = self._get_node(list_Terminals, EnergyConsumer.mRID)
+            node_id = next(iter(connected_node))
+            status = connected_node[node_id]
+            self.energy_consumers[EnergyConsumer.mRID] = {"node": self.nodes.index(node_id),
+                                                          "status": status,
+                                                          "p_specified": EnergyConsumer.p,
+                                                          "q_specified": EnergyConsumer.q,
+                                                          "type": LoadGenType.const_power}
+            # TODO remove lines below. Used example did not have p/q data
+            for ec in self.energy_consumers.values():
+                ec["p_specified"] = 10e4
+                ec["q_specified"] = 10e3
+
     def create_pgm_input(self):
         id_counter = 0
         node = initialize_array("input", "node", len(self.nodes))
@@ -90,10 +93,20 @@ class System():
         source["status"] = [source_param["status"] for source_param in self.sources.values()]
         source["u_ref"] = [source_param["u_ref"] for source_param in self.sources.values()]
         source["sk"] = [source_param["sk"] for source_param in self.sources.values()]
+        id_counter += len(self.sources)
+
+        load = initialize_array("input", "sym_load", len(self.energy_consumers))
+        load["id"] = range(id_counter, id_counter + len(self.energy_consumers))
+        load["node"] = [ec_param["node"] for ec_param in self.energy_consumers.values()]
+        load["status"] = [ec_param["status"] for ec_param in self.energy_consumers.values()]
+        load["p_specified"] = [ec_param["p_specified"] for ec_param in self.energy_consumers.values()]
+        load["q_specified"] = [ec_param["q_specified"] for ec_param in self.energy_consumers.values()]
+        load["type"] = LoadGenType.const_power  # Only const power supported now
 
         return {"node": node,
                 "line": line,
-                "source": source}
+                "source": source,
+                "sym_load": load}
 
     def _get_nodes(self, list_Terminals, elem_uuid):
         start_node_uuid = None
