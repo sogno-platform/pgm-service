@@ -12,6 +12,10 @@ from pgm_service.power_grid.models import Grid
 class StrEnum(str, Enum):
     pass
 
+class InputData(BaseModel):
+    sv: str
+    eq: str
+    tp: str
 
 class PGM_PowerflowCalculationArgs(BaseModel):
     symmetric: bool = True
