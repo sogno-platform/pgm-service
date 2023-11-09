@@ -1,14 +1,13 @@
 from enum import Enum
 from typing import Optional
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field
 
-from power_grid.models import Grid
+
+from pgm_service.power_grid.models import Grid
 
 base_config = ConfigDict(use_enum_values=True) # TODO Check if json_encoders = {datetime: lambda dt: dt.strftime("%Y-%m-%dT%H:%M:%SZ")} is needed as it will be deprecated in the future
-
-
 # XXX StrEnum is available from enum in python 3.11
 class StrEnum(str, Enum):
     pass

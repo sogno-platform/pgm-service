@@ -1,7 +1,8 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
-from pgm_powerflow.aux_models import JobComplete
-from pgm_powerflow.models import PGM_Powerflow
+
+from pgm_service.pgm_powerflow.aux_models import JobComplete
+from pgm_service.pgm_powerflow.models import PGM_Powerflow
+
 
 router = APIRouter(prefix="/pgm_powerflow", tags=["Powerflow"])
 

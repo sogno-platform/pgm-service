@@ -1,7 +1,9 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from power_grid.aux_models import JobComplete
-from power_grid.models import Grid
+
+from pgm_service.power_grid.aux_models import JobComplete
+from pgm_service.power_grid.models import Grid
+
 
 router = APIRouter(prefix="/power_grid", tags=["Grid"])
 
