@@ -37,7 +37,7 @@ dev = [
 ]
 
 [project.scripts]
-pgm-service = "pgm_service:main"
+pgm-service = "pgm_service.main:run"
 
 [project.urls]
 GitHub = "https://github.com/sogno-platform/pgm-service"
