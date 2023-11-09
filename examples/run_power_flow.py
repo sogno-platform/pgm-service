@@ -8,6 +8,8 @@ import glob
 
 from src.pgm_service.power_grid.cgmes_pgm_converter import System
 
+from power_grid_model import PowerGridModel
+
 logging.basicConfig(filename='run_powerflow.log', level=logging.INFO, filemode='w')
 
 def download_grid_data(name, url):
@@ -42,5 +44,9 @@ res = cimpy.cim_import(xml_files, "cgmes_v2_4_15")
 system = System()
 system.load_cim_data(res)
 pgm_input = system.create_pgm_input()
-
 print(pgm_input)
+
+pgm = PowerGridModel(input_data=pgm_input)
+results = pgm.calculate_power_flow()
+
+print(results["node"])
