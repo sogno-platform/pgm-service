@@ -2,6 +2,7 @@ from power_grid_model import initialize_array
 
 from fastapi import FastAPI
 
+import uvicorn
 
 app = FastAPI()
 
@@ -18,5 +19,6 @@ def initialize_default():
     return repr(arr)
 
 
-if __name__ == "__main__":
-    main()
+def main():
+    # uvicorn.run("main:app", port=5000, log_level="info")
+    print("Hello world!")

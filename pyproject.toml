@@ -36,6 +36,9 @@ dev = [
     "black",
 ]
 
+[project.scripts]
+pgm-service = "pgm_service:main"
+
 [project.urls]
 GitHub = "https://github.com/sogno-platform/pgm-service"
 
