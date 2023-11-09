@@ -41,5 +41,6 @@ res = cimpy.cim_import(xml_files, "cgmes_v2_4_15")
 
 system = System()
 system.load_cim_data(res)
+pgm_input = system.create_pgm_input()
 
 print("debug")
