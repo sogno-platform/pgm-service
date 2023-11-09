@@ -5,6 +5,7 @@
 Create and activate a Python 3.12 virtual environment. Go to the root folder of this repository. Run
 
 ```bash
+python -m pip install build
 python -m build --wheel --outdir dist
 docker build --no-cache -t pgm-service .
 ```
