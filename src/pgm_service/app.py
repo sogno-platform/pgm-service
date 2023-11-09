@@ -1,6 +1,5 @@
-from power_grid_model import initialize_array
-
 from fastapi import FastAPI
+from power_grid_model import initialize_array
 
 app = FastAPI()
 
