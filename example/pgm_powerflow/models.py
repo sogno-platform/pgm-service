@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from power_grid_model import CalculationMethod
 
-from power_grid import Grid
+from power_grid.models import Grid
 
 
 # XXX StrEnum is available from enum in python 3.11
