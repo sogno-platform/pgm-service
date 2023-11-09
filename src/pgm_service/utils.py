@@ -47,7 +47,7 @@ def download_grid_data(input_data: InputData, tmp_dir):
     eq = get_from_fileservice(input_data.eq)
     sv = get_from_fileservice(input_data.sv)
     tp = get_from_fileservice(input_data.tp)
-    tmp_dir = tempfile.TemporaryDirectory(dir="./cim_files")
+    tmp_dir = tempfile.TemporaryDirectory()
 
     eq_path = os.path.join(tmp_dir, f"{input_data.eq}_EQ.xml")
     sv_path = os.path.join(tmp_dir, f"{input_data.eq}_SV.xml")

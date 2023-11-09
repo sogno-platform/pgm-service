@@ -14,7 +14,7 @@ from pgm_service.power_grid.cgmes_pgm_converter import System as CGMESToPGMConve
 
 def create_model(grid: Grid):  # TODO make async
     # xml_files = download_data(url=grid.input_data)
-    with tempfile.TemporaryDirectory(dir="./cim_files") as tmpdir:
+    with tempfile.TemporaryDirectory() as tmpdir:
         xml_files = download_grid_data(grid.input_data, tmp_dir=tmpdir)
         cgmes_data = cimpy.cim_import(xml_files, "cgmes_v2_4_15")
         converter = CGMESToPGMConverter()

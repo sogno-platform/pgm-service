@@ -15,6 +15,6 @@ services:
     build:
       context: . 
     environment:
-      FILESERVICE_URL: http://fileservice
+      FILESERVICE_URL: fileservice
     ports:
       - 80:80

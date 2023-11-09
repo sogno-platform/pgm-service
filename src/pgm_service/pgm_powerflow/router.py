@@ -1,4 +1,5 @@
 from datetime import datetime
+import traceback
 from typing import Dict
 from uuid import uuid4
 from fastapi import APIRouter, BackgroundTasks
@@ -34,7 +35,7 @@ async def _calculate(job: JobComplete):
         job.status = Status.SUCCESS
     except Exception as e:
         job.status = Status.FAILED
-        job.details = repr(e)
+        job.details = f"{repr(e)}\n\n{traceback.format_exc()}"
 
     update_py_obj(job, job.id)
 
