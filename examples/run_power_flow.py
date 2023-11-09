@@ -6,7 +6,7 @@ import os
 import requests
 import glob
 
-from cgmes_pgm_converter import System
+from src.pgm_service.power_grid.cgmes_pgm_converter import System
 
 logging.basicConfig(filename='run_powerflow.log', level=logging.INFO, filemode='w')
 
