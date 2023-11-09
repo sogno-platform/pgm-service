@@ -18,7 +18,7 @@ class PGM_Powerflow(BaseModel):
     error_tolerance: float = 1e-8
     max_iterations: int = 20
     calculation_method: Union[CalculationMethod, str] = CalculationMethod.newton_raphson
-    update_data: Optional[str] = None
-    threading: int = -1
+    # update_data: Optional[str] = None
+    # threading: int = -1
     output_component_types: Optional[List[str]] = None
-    continue_on_batch_error: bool = False
+    # continue_on_batch_error: bool = False
